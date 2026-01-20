@@ -8,6 +8,7 @@ TOPSIS is a multi-criteria decision analysis method that ranks alternatives base
 
 ## Installation
 Package listed on PyPI:- https://pypi.org/project/Topsis-Anjani-102303480
+
 Install the package using pip:
 ```bash
 pip install Topsis-Anjani-102303480
