@@ -7,9 +7,8 @@
 TOPSIS is a multi-criteria decision analysis method that ranks alternatives based on their similarity to the ideal solution. This package provides a simple command-line tool to perform TOPSIS analysis on CSV data files.
 
 ## Installation
-
+Package listed on PyPI:- https://pypi.org/project/Topsis-Anjani-102303480
 Install the package using pip:
-
 ```bash
 pip install Topsis-Anjani-102303480
 ```
@@ -21,13 +20,6 @@ After installation, you can use the `topsis` command from anywhere in your termi
 ```bash
 topsis <InputDataFile> <Weights> <Impacts> <OutputResultFileName>
 ```
-
-### Parameters
-
-- **InputDataFile**: Path to the input CSV file
-- **Weights**: Comma-separated weights for each criterion (e.g., "1,1,1,2")
-- **Impacts**: Comma-separated impacts for each criterion ('+' for maximize, '-' for minimize)
-- **OutputResultFileName**: Path for the output CSV file
 
 ### Example
 
