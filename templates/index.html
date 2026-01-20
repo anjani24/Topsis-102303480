@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TOPSIS Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            color: black;
+            width: 60%;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 15px gray;
+        }
+
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #progress {
+            width: 90%;
+            height: 20px;
+            background: lightgray;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        #bar {
+            width: 0%;
+            height: 100%;
+            background: green;
+            border-radius: 10px;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 90%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>TOPSIS Decision Tool</h2>
+
+    <input type="file" id="file" accept=".xlsx,.csv" required>
+    <input type="text" id="weights" placeholder="Weights (1,2,1,2)" required>
+    <input type="text" id="impacts" placeholder="Impacts (+,-,+,-)" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+
+    <button onclick="previewFile()">Preview File</button>
+    <button onclick="runTopsis()">Run TOPSIS</button>
+
+    <div id="progress"><div id="bar"></div></div>
+
+    <h3>File Preview (first 5 rows)</h3>
+    <table id="preview"></table>
+
+    <a id="download" style="display:none" href="/download">Download Result</a>
+
+    <p id="message"></p>
+</div>
+
+<script>
+function previewFile(){
+    let formData = new FormData();
+    formData.append("file", document.getElementById("file").files[0]);
+
+    fetch("/preview", { method: "POST", body: formData })
+    .then(r => r.json())
+    .then(data => {
+        let table = document.getElementById("preview");
+        table.innerHTML = "";
+
+        let header = "<tr>";
+        for (let key in data[0]) header += "<th>"+key+"</th>";
+        header += "</tr>";
+        table.innerHTML += header;
+
+        data.forEach(row=>{
+            let r = "<tr>";
+            for (let key in row) r += "<td>"+row[key]+"</td>";
+            r += "</tr>";
+            table.innerHTML += r;
+        });
+    });
+}
+
+function runTopsis(){
+    let bar = document.getElementById("bar");
+    bar.style.width = "0%";
+
+    let interval = setInterval(()=>{
+        let w = parseInt(bar.style.width);
+        if(w < 90) bar.style.width = (w + 5) + "%";
+    }, 300);
+
+    let formData = new FormData();
+    formData.append("file", document.getElementById("file").files[0]);
+    formData.append("weights", document.getElementById("weights").value);
+    formData.append("impacts", document.getElementById("impacts").value);
+    formData.append("email", document.getElementById("email").value);
+
+    fetch("/run", { method: "POST", body: formData })
+    .then(r => r.json())
+    .then(res => {
+        clearInterval(interval);
+        bar.style.width = "100%";
+
+        if(res.error){
+            document.getElementById("message").innerHTML = res.error;
+        } else {
+            document.getElementById("message").innerHTML = 
+              "Result emailed successfully!";
+            document.getElementById("download").style.display = "block";
+        }
+    });
+}
+</script>
+
+</body>
+</html>
