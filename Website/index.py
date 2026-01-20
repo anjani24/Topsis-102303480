@@ -9,8 +9,8 @@ from email.message import EmailMessage
 app = Flask(__name__)
 app.secret_key = "secretkey"
 
-UPLOAD_FOLDER = "uploads"
-RESULT_FOLDER = "results"
+UPLOAD_FOLDER = "/tmp/uploads"
+RESULT_FOLDER = "/tmp/results"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
@@ -28,7 +28,7 @@ def calculate_ideal_solutions(weighted_matrix, impacts):
         if impact == '+':
             ideal_best.append(weighted_matrix[:, i].max())
             ideal_worst.append(weighted_matrix[:, i].min())
-        else:
+        elif impact == '-':
             ideal_best.append(weighted_matrix[:, i].min())
             ideal_worst.append(weighted_matrix[:, i].max())
     return np.array(ideal_best), np.array(ideal_worst)
@@ -125,7 +125,13 @@ def run_topsis():
     else:
         data = pd.read_excel(path)
 
+    if data.shape[1] < 3:
+        return jsonify({"error": "Input file must have at least three columns (ID, Criteria1, Criteria2, ...)."})
+
     criteria_matrix = data.iloc[:, 1:].values
+
+    if not np.issubdtype(criteria_matrix.dtype, np.number):
+        return jsonify({"error": "Criteria columns must contain only numeric values."})
 
     if len(weights_list) != criteria_matrix.shape[1]:
         return jsonify({"error": "Weights must match number of criteria columns!"})
