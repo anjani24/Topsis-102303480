@@ -3,6 +3,65 @@
 <head>
     <title>TOPSIS Web App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            color: black;
+            width: 60%;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 15px gray;
+        }
+
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #progress {
+            width: 90%;
+            height: 20px;
+            background: lightgray;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        #bar {
+            width: 0%;
+            height: 100%;
+            background: green;
+            border-radius: 10px;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 90%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -87,4 +146,3 @@ function runTopsis(){
 
 </body>
 </html>
-
